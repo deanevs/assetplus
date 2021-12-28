@@ -4,10 +4,6 @@ warranty date = FDG format = '2013-04-19'
 
 """
 
-from warranty import regulators_warranty as regs
-from warranty import suctions
-from warranty import flows
-
 
 def main():
     # for asset in regs.regs:
