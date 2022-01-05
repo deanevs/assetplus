@@ -20,7 +20,7 @@ def main():
 
     catch = True
     for row in sheet.iter_rows(values_only=True):
-        if catch:
+        if catch:       # ignore headers
             catch = False
             continue
         asset_id = row[0][1:]
