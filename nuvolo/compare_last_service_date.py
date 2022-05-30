@@ -22,19 +22,14 @@ def main():
     df_nuv = df_nuv[df_nuv['Technical Department'] == 'GE Biomed']
     print(f"Length of Nuvolo = {len(df_nuv)}")
 
-    # before merge, clean up columns
-    # convert string May 2020 to a date
-
-    # df_kat['last known PM date'] = df_kat.apply(
-    #     lambda x: x['last known PM date'].replace(' ', '-'), axis=1
-    # )
     reasons = ['new to contract','New to contract', 'CNL']
+
     for idx, row in df_kat.iterrows():
         last_dt = row['last known PM date']
         if len(last_dt) > 1 and last_dt not in reasons:
             #dts = last_dt.replace(' ', '-')
             try:
-                dt = datetime.datetime.strptime(last_dt, '%b %Y').date() # .strftime('%d-%m-%Y')
+                dt = datetime.datetime.strptime(last_dt, '%b %Y').date()
                 df_kat.at[idx, 'LAST PM DATE'] = dt
 
             except:
@@ -42,14 +37,10 @@ def main():
         else:
             df_kat.at[idx, 'LAST PM DATE'] = ''
 
-
     merged = df_nuv.merge(df_kat, how='outer', left_on='Asset Tag', right_on='New asset tag')
     print(f"Length of Merged = {len(merged)}")
 
-
-
     # now compare last pm dates
-
     for idx, row in merged.iterrows():
         nuv_last_pm = row['Last Service Date']
         kat_last_pm = row['LAST PM DATE']
@@ -70,16 +61,6 @@ def main():
 
     print(merged.info())
     # print(merged)
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
