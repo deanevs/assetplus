@@ -3,8 +3,8 @@
 
 def main():
 
-    N_EF = 'CARDIAC'
-    for asset_id in cardiac_list:
+    N_EF = 'AUDIOLOGY'
+    for asset_id in audiology_blanks_28_06_22:
         sql = F"UPDATE B_EQ1996 SET N_EF = '{N_EF}' WHERE N_IMMA = '{asset_id}'"
         print(sql)
 
@@ -15,6 +15,56 @@ def main():
     # for asset_id in cardiac_cx_list:
     #     sql = F"UPDATE B_EQ1996 SET N_EF = '{N_EF}' WHERE N_IMMA = '{asset_id}'"
     #     print(sql)
+
+
+audiology_blanks_28_06_22 = ['526462',
+'AP-24856',
+'AP-31407',
+'AP-31408',
+'AP-31409',
+'AP-31410',
+'AP-31411',
+'AP-31412',
+'AP-31413',
+'AP-31398',
+'AP-33329',
+'516525',
+'514639',
+'527439',
+'512220',
+'512221',
+'514437',
+'536892',
+'539609',
+'536134',
+'AP-31974',
+'AP-33542',
+'AP-33543',
+'AP-33544',
+'AP-31586',
+'AP-31587',
+'536867',
+'543157',
+'543367',
+'535107',
+'AP-24517',
+'509576',
+'AP-29546',
+'AP-29562',
+'AP-31576',
+'AP-31577',
+'AP-31578',
+'AP-31579',
+'AP-31580',
+'AP-32058',
+'AP-32060',
+'AP-29397',
+'AP-29398',
+'AP-29399',
+'AP-29704'
+                             ]
+
+
 
 cardiac_list = ['537299',
 '537293',

@@ -21,7 +21,7 @@ def main():
     # d2 = d1 + datetime.timedelta(days=365)
     # print(d2)
 
-    new_list = ass
+    new_list = date_05082022
 
     n = len(new_list)
     idx = 0
@@ -70,6 +70,18 @@ def date_to_str_next(date):
     """Helper function for converting date to string"""
     return date.strftime("%Y%m%d")
 
+
+date_05082022 = [
+    ('AP-33851','07/05/2022'),
+    ('534927','07/05/2022')
+]
+
+date_28_6_22 = [('AP-25310','28/06/2022'),
+                ('509763', '22/06/2022'),
+                ('504441', '21/06/2022'),
+                ('506520', '21/06/2022'),
+                ('506516', '24/06/2022')
+]
 
 ass = [
     ('AP-19980','04/05/2021'),

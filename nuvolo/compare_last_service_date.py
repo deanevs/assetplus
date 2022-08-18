@@ -10,7 +10,7 @@ pd.set_option('display.width', 1000)
 file_path = Path(r"C:\Users\212628255\Documents\2 GE\AssetPlus\Nuvolo\Projects\20220517 - Compare files for Kat")
 nuvolo_file = "x_nuvo_eam_clinical_devices.xlsx"
 kat_file = 'GEMVS 23_05_22.xlsx'
-output = Path(r"C:\Users\212628255\Documents\2 GE\AssetPlus\3 Sites\2 Spire\Nuvolo\output")
+output_filename = 'merged_' + datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.xlsx'
 
 
 def main():
@@ -27,11 +27,8 @@ def main():
     for idx, row in df_kat.iterrows():
         last_dt = row['last known PM date']
         if len(last_dt) > 1 and last_dt not in reasons:
-            #dts = last_dt.replace(' ', '-')
             try:
-                dt = datetime.datetime.strptime(last_dt, '%b %Y').date()
-                df_kat.at[idx, 'LAST PM DATE'] = dt
-
+                df_kat.at[idx, 'LAST PM DATE'] = datetime.datetime.strptime(last_dt, '%b %Y').date()
             except:
                 print(f"*************************************ERROR - {last_dt}")
         else:
@@ -44,23 +41,15 @@ def main():
     for idx, row in merged.iterrows():
         nuv_last_pm = row['Last Service Date']
         kat_last_pm = row['LAST PM DATE']
-        # print(type(nuv_last_pm))
-        print(type(kat_last_pm))
-
         if isinstance(nuv_last_pm, pd.Timestamp) and isinstance(kat_last_pm, datetime.date):
-            print(nuv_last_pm, kat_last_pm)
-            # nuv_dt = nuv_last_pm.date()
-            # merged.at[idx,'NUVOLO_LAST_PM_DATE'] = nuv_dt
-            # kat_dt = datetime.datetime.strptime(kat_last_pm, '%d-%m-%Y').date()
-            # print(nuv_dt, kat_dt)
-            delta = (nuv_last_pm.date() - kat_last_pm).days
+            # print(nuv_last_pm, kat_last_pm)
             merged.at[idx, 'DELTA'] = (nuv_last_pm.date() - kat_last_pm).days
 
-    output = file_path / "merged6.xlsx"
+
+    output = file_path / output_filename
     merged.to_excel(output, index_label=False)
 
     print(merged.info())
-    # print(merged)
 
 
 if __name__ == '__main__':
