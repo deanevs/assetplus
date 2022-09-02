@@ -1,3 +1,9 @@
+"""
+Run query "EXPECTED END OF LIFE"
+Export to csv and update the script below to match the filename
+Copy and paste the output to SQL Studio
+"""
+
 import datetime
 import pandas as pd
 from pathlib import Path
@@ -9,7 +15,6 @@ pd.set_option('display.width', 1000)
 
 
 df = pd.read_csv((Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20220831 - Replacement and Exp End Life Fix') / 'REPLACEMENT_FIX (2).csv'))
-# print(df)
 
 def do_sql(n_imma, mhs, eqamtcom):
     sql = f"UPDATE B_EQ1996 SET MHS = '{mhs}', EQ_AMT_COM = {eqamtcom} WHERE N_IMMA = '{n_imma}'"
