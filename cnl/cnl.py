@@ -1,16 +1,19 @@
 from pathlib import Path
 import pandas as pd
+import matplotlib as plt
 import sys
 
 df = pd.read_excel((Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20220817 - CNL Last 3Y') / '20221708-STUART_CNL.xlsx'))
-# print(df)
 
 df.sort_values('END DATE', ascending=False, inplace=True)
 df['WO NUM'] = df['WO NUM'].astype('str')
 
 grp = df.groupby('ASSET ID')
 
-cnt = 0
+# print(df.STATUS.value_counts().plot())
+#
+# sys.exit()
+
 CNL_LIMIT = 3
 main_cnt = 0
 
@@ -44,9 +47,3 @@ for name, group in grp:
 print(f"Total assets = {main_cnt}")
 
 
-
-
-
-    # cnt += 1
-    # if cnt == 50:
-    #     break
