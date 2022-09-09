@@ -14,7 +14,7 @@ pd.set_option("max_rows", None)     # displays all rows ... change None to 100 o
 pd.set_option('display.width', 1000)
 
 
-df = pd.read_csv((Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20220831 - Replacement and Exp End Life Fix') / 'REPLACEMENT_FIX (2).csv'))
+df = pd.read_csv((Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20220831 - Replacement and Exp End Life Fix') / 'REPLACEMENT_FIX (3).csv'))
 
 def do_sql(n_imma, mhs, eqamtcom):
     sql = f"UPDATE B_EQ1996 SET MHS = '{mhs}', EQ_AMT_COM = {eqamtcom} WHERE N_IMMA = '{n_imma}'"
