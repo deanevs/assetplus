@@ -15,7 +15,7 @@ pd.options.display.width = 1000
 
 do_excel = True
 
-wdire = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports')
+wdire = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\new downloads')
 output = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\Contract Changes')
 assets = pd.read_csv((wdire / 'INFOASSETSRETIREDAFTER2015.csv')) #, parse_dates=True)
 mth = pd.read_csv((wdire / 'monthly-pm-status.csv')) #,parse_dates=True)
@@ -26,7 +26,7 @@ keys = list(grp.groups.keys())
 keys.sort(reverse=True)
 
 # how many months to display from most recent
-NUM_MONTHS = 10
+NUM_MONTHS = 1
 
 # stores dict values from each month to create dataframe
 rows_list = []

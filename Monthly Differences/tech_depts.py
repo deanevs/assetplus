@@ -19,7 +19,7 @@ do_excel = True
 NUM_MONTHS = 1
 
 # files and paths
-wdire = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports')
+wdire = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\new downloads')
 output_td = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\Tech Dept Changes')
 output_con = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\Contracts Changes')
 assets = pd.read_csv((wdire / 'INFOASSETSRETIREDAFTER2015.csv')) #, parse_dates=True)
