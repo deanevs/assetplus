@@ -14,12 +14,15 @@ pd.set_option('display.width', 1000)
 
 # load paths and files and create dataframes
 wdir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\new downloads')
+datadir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20221221 - bulk contracts and tech depts for billing tracker')
+
+
+# use the monthly capture and get the last month data for compare
 mth = pd.read_csv((wdir / 'monthly_pm_status.csv'))
 mth.collected = pd.to_datetime(mth.collected)
 grp = mth.groupby('collected')
 keys = list(grp.groups.keys())
 keys.sort(reverse=True)
-
 
 last_mth = mth.loc[mth.collected == keys[0]]
 print(last_mth.head())
@@ -27,20 +30,24 @@ print(last_mth.shape)
 
 # print(mth.loc[mth.n_imma == '501495'])
 
-datadir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20221221 - bulk contracts and tech depts for billing tracker')
+# setup the requested updates data
 df = pd.read_excel((datadir / 'AP Updates.xlsx'))
 df.drop(columns=['Equip Number', 'Equip Number.1', 'Serial', 'Manufacturer', 'Model', 'Asset Name', 'Risk', 'Med Dept', 'Site Name', 'Install Date', 'Division'], inplace=True)
 df['Assetplus ID'] = df['Assetplus ID'].astype(str)
-
-
-
 print(df.head())
 print(df.shape)
 
+# merge to get column differences - using inner join should get same number as df, if not it is the ones
+# that have added/removed since
 merged = pd.merge(df, last_mth, how='inner', left_on='Assetplus ID', right_on='n_imma')
 print(merged.head())
 print(merged.shape)
 
+# use this to find the missing ones
+# notin = df['Assetplus ID'][~df['Assetplus ID'].isin(last_mth.n_imma)].tolist()
+# print(notin)
+
+# method is to emulate AP by copying for each PM plan, hence create separate data for each
 pm_only = merged.loc[merged['New Contract'] == 'MMS PM ONLY 20-25']
 print(pm_only.head(10))
 print(pm_only.shape)
@@ -49,11 +56,9 @@ fully_comp = merged.loc[merged['New Contract'] == 'MMS FULLY COMP 20-25']
 print(fully_comp.head(10))
 print(fully_comp.shape)
 
-
-
-
-def insert_hist_eq(contract, asset,cont_type,  fin_period_from='20220331', today='20221221'):
-    """ MMS PM ONLY 20-25  501495  20220331 """
+def insert_hist_eq(contract, asset, cont_type, fin_period_from='20220331', today='20221221'):
+    """ This should be the same for both PM ONLY and FULLY COMP except for the pm type field
+        Note the med dept and location are set to NULL since this would require a lookup """
     sql = f"INSERT INTO HISTO_EQ (N_CONTRAT,CODE_TYPE,N_IMMA,ANNEE_EXO,DATE_EFFET,DATE_ECHU,PRORATA,TTC_ANNEE,HT_NET," \
           f"TTC_NET,TTC_PREV,TTC_CORR,VAC_HT,FRE_MP,NB_VCM,PD_MP,PD_MC,PD_SEUIL,NB_AR_BL,DMCD_B,DMI,T_MI,DEFAUT,COMMENTAIRE," \
           f"PARA1,GENERIC,GENERIC_SEQ,FK_LIEU_N_LIEU,FK_UNITES_N_UF,FK_BUDGET_NU_COMPTE,FK_BUDGET_AN_EXO," \
@@ -76,12 +81,12 @@ def update_b_eq1996(contract, asset):
     return sql
 
 
-cnt = 0
+# cnt = 0
 with open((datadir / 'fully_comp.txt'), 'w') as fd:
     for idx, row in fully_comp.iterrows():
-        cnt += 1
-        if cnt <= 10:
-            continue
+        # cnt += 1
+        # if cnt <= 10:
+        #     continue
         asset = row.n_imma
         contract = row['New Contract']
         insert = insert_hist_eq(contract, asset, 'COMP')
@@ -92,38 +97,18 @@ with open((datadir / 'fully_comp.txt'), 'w') as fd:
 
 
 # cnt = 0
-# with open((datadir / 'pm_only.txt'), 'w') as fd:
-#     for idx, row in pm_only.iterrows():
-#         cnt += 1
-#         if cnt <= 10:
-#             continue
-#         asset = row.n_imma
-#         contract = row['New Contract']
-#         insert = insert_hist_eq(contract, asset)
-#         fd.write(insert)
-#         update = update_b_eq1996(contract, asset)
-#         fd.write(update)
-#         fd.write('GO\n')
+with open((datadir / 'pm_only.txt'), 'w') as fd:
+    for idx, row in pm_only.iterrows():
+        # cnt += 1
+        # if cnt <= 10:
+        #     continue
+        asset = row.n_imma
+        contract = row['New Contract']
+        insert = insert_hist_eq(contract, asset, 'SM')
+        fd.write(insert)
+        update = update_b_eq1996(contract, asset)
+        fd.write(update)
+        fd.write('GO\n')
 
-# notin = df['Assetplus ID'][~df['Assetplus ID'].isin(last_mth.n_imma)].tolist()
-# print(notin)
-#
-#
-#
-# def update_lk_asset_td(data):
-#     return f"UPDATE LK_ASSET_TD SET FK_TD = '{data[1].upper()}' WHERE FK_ASSET = '{data[0].upper()}';\n"
-#
-# def update_b_eq1996(data):
-#     return f"UPDATE B_EQ1996 SET UNIT_ST = '{data[1].upper()}' WHERE N_IMMA = '{data[0].upper()}';\n"
-#
-# with open((datadir / 'output.txt'), 'w') as fd:
-#     for idx, row in merged.iterrows():
-#         asset = row.n_imma
-#         td = row['New Tech Department']
-#         data = (asset, td)
-#
-#         fd.write(update_b_eq1996(data))
-#         fd.write(update_lk_asset_td(data))
-#         print(update_b_eq1996(data))
-#         print(update_lk_asset_td(data))
+
 
