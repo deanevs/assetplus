@@ -7,22 +7,36 @@ Setup the directories and merge keys
 
 from pathlib import Path
 import pandas as pd
+import sys
+import os
 
 pd.options.display.max_columns = None
-pd.options.display.max_rows= None     # displays all rows ... change None to 100 ow whatever number
+pd.options.display.max_rows = None     # displays all rows ... change None to 100 ow whatever number
 pd.options.display.width = 1000
 
-wdir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\CNL')
-fname = '20221219 - PM DATA FROM 2016 - ACTIVE.csv'
+# wdir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\CNL')
+# fname = '20221219 - PM DATA FROM 2016 - ACTIVE.csv'
+
+path_to_file = '/home/dean/Documents/Work/CNL analysis/20221219 - PM DATA FROM 2017.csv'
+# filename = '20221219 - PM DATA FROM 2017.csv'
+# path = os.path.join('home', 'dean', 'Documents','Work','CNL analysis','20221219 - PM DATA FROM 2017.csv')
+
 
 # load data
-df_pms = pd.read_csv((wdir / fname))
+df_pms = pd.read_csv(path_to_file, on_bad_lines='skip')
+print(df_pms.head())
+print(df_pms.describe())
+
 
 def convert_risk(r):
-    if r == 1: return 'HIGH'
-    elif r == 2: return 'MEDIUM'
-    elif r == 3: return 'LOW'
-    else: return 'ERROR'
+    if r == 1:
+        return 'HIGH'
+    elif r == 2:
+        return 'MEDIUM'
+    elif r == 3:
+        return 'LOW'
+    else:
+        return 'ERROR'
 
 # clean and filter
 df_pms['wo'] = df_pms['wo'].astype('str')
