@@ -124,16 +124,6 @@ def main():
     print(f"FOLLOWUP = {cnt_followup}")
     print(f"IGNORE = {cnt_ignore}")
 
-    #         if row['status'] == 'COULD NOT LOCATE':
-    #             cnl += 1
-    #         elif cnl >= CNL_LIMIT:
-    #             df_out = pd.concat([df_out, group], ignore_index=True)
-    #             main_cnt += 1
-    #             break
-    #         else:  # not CNL and <2 hence skip asset group without saving
-    #             break
-    #
-    # print(f"Total assets = {main_cnt}")
     df_deactivation.to_excel('DEACTIVATION.xlsx', index=False)
     df_follow_up.to_excel('FOLLOWUP.xlsx', index=False)
 
