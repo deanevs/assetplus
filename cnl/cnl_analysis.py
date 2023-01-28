@@ -16,13 +16,16 @@ pd.options.display.max_columns = None
 pd.options.display.max_rows = None     # displays all rows ... change None to 100 ow whatever number
 pd.options.display.width = 1000
 
-# wdir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\CNL')
-# fname = '20221219 - PM DATA FROM 2016 - ACTIVE.csv'
-path_to_file = '/home/dean/Documents/Work/CNL analysis/PM WO SINCE 2017.csv'
-
 
 def main():
     # load data
+    if os.name == 'posix':
+        print('HERE')
+        path_to_file = '/home/dean/Documents/Work/CNL analysis/PM WO SINCE 2017.csv'
+    else:
+        path = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\Monthly Reports\CNL')
+        path_to_file = path / 'PM WO SINCE 2017.csv'
+
     df = pd.read_csv(path_to_file, on_bad_lines='skip')
 
     df = df.rename(
@@ -42,7 +45,7 @@ def main():
     df['status'].replace('PM PASS', 'COULD NOT LOCATE', inplace=True)
     df = df[df['status'].isin(['JOB DONE', 'JOB COMPLETED', 'PM PASS', 'COULD NOT LOCATE'])]
 
-    # make column with the first of this month
+    # make column with the first day of this month
     this_month_first = datetime(datetime.today().year, datetime.today().month, 1).date()
     df['this_month_first'] = pd.to_datetime(this_month_first)
 
@@ -52,9 +55,10 @@ def main():
     # get month difference
     df['delta_months'] = ((df.this_month_first - df.end_date_first) / np.timedelta64(1, 'M')).astype(int)
 
+    # require end dates in order for continuous count of cnl to be correct
     df.sort_values('end_date', ascending=False, inplace=True)
 
-    print(df.head(20))
+    print(df.head())
     print(df['status'].value_counts())
     print(f"Number of PMs = {len(df)}")
 
@@ -71,52 +75,41 @@ def main():
     cnt_ignore = 0
 
     for name, group in grp:
-        # reset flags
-        cnl_cnt = 0  # counts continuous cnls from first
-
-        # variables to determine last group member
-        grp_rows = len(group)
+        # reset flags and counts
+        cnl_cnt = 0  # counts continuous cnl from first
         row_cnt = 0
         fg_followup = False
+        fg_deactivate = False
 
         # iterate over individuals assets jobs
         for idx, row in group.iterrows():
             row_cnt += 1
             fg_first_row = row_cnt == 1
-            fg_last_row = row_cnt == grp_rows  # set last flag
             fg_cnl = row['status'] == 'COULD NOT LOCATE'   # set cnl flag
 
-            # only look at 6 months for first row
             if fg_first_row:
                 # reset flags
                 fg_followup = False
-
-                if row['delta_months'] == 6 and fg_cnl:
-                    # print(row)
-                    fg_followup = True
+                fg_deactivate = False
+                if fg_cnl:
+                    fg_deactivate = True
                     cnl_cnt += 1
+                if fg_cnl and row['delta_months'] == 6:     # decide >= or == 6 months
+                    fg_followup = True
                 else:
                     cnt_ignore += 1
-                    break    # get next group
-
-            # not first row but already qualified and is a cnl
-            elif fg_followup and fg_cnl:   # ALREADY CNL PLUS CNL
+                    break
+            elif fg_deactivate and fg_cnl:   # not first row but already qualified and is a cnl
                 cnl_cnt += 1    # increment cnl count
                 if cnl_cnt == 3:
-                    # print(f'DEACTIVATE {row.asset}')
-                    # print(row)
-                    df_deactivation = pd.concat([df_deactivation, group], ignore_index=True)
                     cnt_deactivate += 1
+                    df_deactivation = pd.concat([df_deactivation, group], ignore_index=True)
                     break
-
-            # not cnl but the first qualified hence add to followup and terminate group
-            elif fg_followup:   # not CNL so end it here
-                # print(f'FOLLOWUP {row.asset}')
+            elif fg_followup:
                 cnt_followup += 1
                 df_follow_up = pd.concat([df_follow_up, group], ignore_index=True)
                 break
-            # shouldn't get here
-            else:
+            else:   # shouldn't get here
                 print('I am illegally here')
                 break
 
@@ -124,8 +117,9 @@ def main():
     print(f"FOLLOWUP = {cnt_followup}")
     print(f"IGNORE = {cnt_ignore}")
 
-    df_deactivation.to_excel('DEACTIVATION.xlsx', index=False)
-    df_follow_up.to_excel('FOLLOWUP.xlsx', index=False)
+    # create reports
+    df_deactivation.to_excel('DEACTIVATION equal to 6 months.xlsx', index=False)
+    df_follow_up.to_excel('FOLLOWUP equal to 6 months.xlsx', index=False)
 
 
 def convert_risk(r):
