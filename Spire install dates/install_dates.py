@@ -2,8 +2,6 @@ import pandas as pd
 from pathlib import Path
 import sys
 
-import sys
-
 data_folder = Path(r"C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20221005 - SPIRE Interface Dates")
 nuvolo_file = 'x_nuvo_eam_clinical_devices.xlsx'
 must_file = 'must_spire'
@@ -13,8 +11,8 @@ df_nuv = pd.read_excel((data_folder / nuvolo_file))
 df_ge = pd.read_excel(ge_pm_calc, index_col=False, sheet_name='Asset Data')
 df_ap = pd.read_excel(ap_pm_calc, index_col=False, sheet_name='A')
 
-df_ge['STATUS'].replace('In Date','IN DATE',inplace=True)
-df_ge['STATUS'].replace('Late','OUT OF DATE',inplace=True)
+df_ge['STATUS'].replace('In Date', 'IN DATE', inplace=True)
+df_ge['STATUS'].replace('Late', 'OUT OF DATE', inplace=True)
 
 # list of words to ignore to reduce false positives
 # remove_list = [' EQUIPMENT', ' HEALTHCARE', ' MEDICAL',' SERVICES',' MEDICAL',' SCIENTIFIC',  ' INSTRUMENTS',
@@ -22,7 +20,8 @@ df_ge['STATUS'].replace('Late','OUT OF DATE',inplace=True)
 #                ' BIOMEDICAL',' LABORATORIES',' TECHNOLOGY',  ' INSTRUMENTATION', ' SYSTEM', ' INTERNATIONAL']
 
 # create empty dataframe
-analysis_df = pd.DataFrame(columns=['Asset ID','PM Status GE','PM Status AP','GE Next Date','AP Next Date', 'Install'])
+analysis_df = pd.DataFrame(
+    columns=['Asset ID', 'PM Status GE', 'PM Status AP', 'GE Next Date', 'AP Next Date', 'Install'])
 
 counter = 0
 for idx, row in df_ge.iterrows():
@@ -46,10 +45,11 @@ for idx, row in df_ge.iterrows():
             status_ap = row1['PM Status']
             next_ap = row1['Date of next PM']
             if status_ap != status_ge:
-                analysis_df = analysis_df.append({'Asset ID': asset_ge,'PM Status GE': status_ge,'PM Status AP' : status_ap,'GE Next Date': next_ge,'AP Next Date': next_ap, 'Install': install}, ignore_index=True)
+                analysis_df = analysis_df.append(
+                    {'Asset ID': asset_ge, 'PM Status GE': status_ge, 'PM Status AP': status_ap,
+                     'GE Next Date': next_ge, 'AP Next Date': next_ap, 'Install': install}, ignore_index=True)
                 # print(f"")
             continue
-
 
 # sys.exit()
 #
@@ -111,4 +111,3 @@ from datetime import datetime
 save_file = "pm_check_" + str(datetime.today()) + ".xlsx"
 analysis_df.to_excel(save_file)
 print("Saved to {}".format(save_file))
-
