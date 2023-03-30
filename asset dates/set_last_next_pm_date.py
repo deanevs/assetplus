@@ -6,12 +6,11 @@ D_DERN_INT = '2021-01-13'   # date of last wo i.e. same
 D_DER_I_C = '2021-01-13'    # date of last corrective i.e. same
 D_DER_I_P = '2021-01-13'    # date of last PM
 D_PRO_I_P = '20200318'      # date of next PM
-
 """
+
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import openpyxl
-
 
 
 def main():
@@ -28,7 +27,7 @@ def main():
     for idx in range(n):
         asset = new_list[idx][0]
         next_pm_str = new_list[idx][1]
-        #next_pm_date = datetime.strptime(next_pm_str,'dd-mm-yyyy')
+        # next_pm_date = datetime.strptime(next_pm_str,'dd-mm-yyyy')
         sql = update_last_pm_eq1996(asset, (next_pm_str))
         print(sql)
         print("GO")
@@ -72,11 +71,11 @@ def date_to_str_next(date):
 
 
 date_05082022 = [
-    ('AP-33851','07/05/2022'),
-    ('534927','07/05/2022')
+    ('AP-33851', '07/05/2022'),
+    ('534927', '07/05/2022')
 ]
 
-date_28_6_22 = [('AP-25310','28/06/2022'),
+date_28_6_22 = [('AP-25310', '28/06/2022'),
                 ('509763', '22/06/2022'),
                 ('504441', '21/06/2022'),
                 ('506520', '21/06/2022'),
