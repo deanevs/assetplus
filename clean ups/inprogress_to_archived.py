@@ -4,11 +4,24 @@ Note this is in integer format
 """
 
 def main():
-    to_be_converted = [233310]
+    to_be_converted = ['232719',
+                        '231964',
+                        '232722',
+                        '233594',
+                        '231954',
+                        '232690',
+                        '233589',
+                        '232715',
+                        '235075',
+                        '235084',
+                        '231087',
+                        '231957'
+                       ]
 
     for wo in to_be_converted:
         print(convert_to_archived(wo))
         print("--******************************************")
+
 
 
 
@@ -49,7 +62,7 @@ def convert_to_archived(wo_num):
 
     sql_delete = f"DELETE FROM EN_COURS WHERE NU_INT= '{wo_num}'\n\n" \
 
-    sql_update_status = f"UPDATE B_FT1996\nSET INT_STATUS = '4', LIB_STATUT = 'JOB COMPLETED'\n " \
+    sql_update_status = f"UPDATE B_FT1996\nSET INT_STATUT = '4', LIB_STATUT = 'JOB COMPLETED'\n " \
                         f"WHERE NU_INT = '{wo_num}'"
 
     sql_out = sql_insert + sql_delete + sql_update_status
