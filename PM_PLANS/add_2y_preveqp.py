@@ -10,39 +10,31 @@ pd.options.display.width = 1000
 
 
 workdir = Path(r'C:\Users\212628255\Documents\2 GE\AssetPlus\7 Projects\20230506 - 7Y PM PLAN FLOW')
-filename = 'flow meters 5 year.xlsx'
-filename2 = 'pm-7y-flow-DATES'
+filename = 'pm-7y-flow-DATES.csv'
 
 
 def main():
-    # df = pd.read_excel(workdir / filename)
-    df = pd.read_csv(workdir / filename2)
-
+    df = pd.read_csv(workdir / filename)
     print(df.head())
-    print(len(df))
 
-    # df_flow = df[df.Name.str.contains('FLOW', case=False)]
-    # print(f"New length with flow = {len(df_flow)}")
-
-    for idx, row in df_flow.iterrows():
-        asset = row['Asset No']
-        name = row.Name
-        print(update(asset))
+    for idx, row in df.iterrows():
+        asset = row['N_IMMA']
+        dt = row['DATE_PREV']
+        new_date_str = update_next_pm(str(dt))
+        print(f"UPDATE PREV_EQP SET DATE_PREV = '{new_date_str}' WHERE N_IMMA = '{asset}'")
 
 
 def update(asset):
     return f"UPDATE PREV_EQP SET NU_PREVENT = '7Y-FLOW' WHERE N_IMMA = '{asset}'"
 
-def update_next_pm(asset, dt):
+
+def update_next_pm(dt):
     # convert date
     prev_date = datetime.strptime(dt, "%Y%m%d")
     # add 2 years
-    new_date = prev_date + relativedelta(years=2)
-    print(new_date)
-
-
-
-
+    new_date = (prev_date + relativedelta(years=2)).date()
+    new_date_str = datetime.strftime(new_date, "%Y%m%d")
+    return new_date_str
 
 
 if __name__ == '__main__':
