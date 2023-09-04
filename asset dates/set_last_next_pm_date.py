@@ -20,7 +20,7 @@ def main():
     # d2 = d1 + datetime.timedelta(days=365)
     # print(d2)
 
-    new_list = date_05082022
+    new_list = date_21_07_23
 
     n = len(new_list)
     idx = 0
@@ -53,7 +53,7 @@ def update_last_pm_eq1996(asset, pm_date):
     # sql = "UPDATE B_EQ1996\n" \
     #       f"SET D_DER_I_P = '{str_pm_date}', D_PRO_I_P = '{str_next_pm}' WHERE N_IMMA = '{asset}'\n"
     sql = "UPDATE B_EQ1996\n" \
-          f"SET D_PRO_I_P = '{str_next_pm}', D_DER_I_P = '{str_last_pm}'  WHERE N_IMMA = '{asset}'\n"
+          f"SET D_PRO_I_P = '{str_next_pm}', D_DER_I_P = '{str_last_pm}'  WHERE FILLER1 = '{asset}'\n"
 
     return sql
 
@@ -68,6 +68,23 @@ def date_to_str_last(date):
 def date_to_str_next(date):
     """Helper function for converting date to string"""
     return date.strftime("%Y%m%d")
+
+
+date_21_07_23 = [
+    ('588153', '09/05/2023'),
+    ('574294', '12/05/2023'),
+    ('522496', '18/05/2023'),
+    ('522497', '18/05/2023'),
+    ('522453', '18/05/2023'),
+    ('506516', '30/06/2023')
+]
+
+
+
+
+
+
+
 
 
 date_05082022 = [
